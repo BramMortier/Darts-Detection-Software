@@ -1,0 +1,40 @@
+[GLOBAL INFO] BASE CONFIGURATION 
+- dartboard radius: 171 
+- camera radius: 310 
+
+[GLOBAL INFO] BASE LINE EQUATIONS 
+- blue camera: 0.29999x-92.99676 
+- red camera: 0.11147x-34.55716 
+- green camera: -0.37392x115.91514
+
+[GLOBAL INFO] CORRECTED POLAR COORDS 
+blue camera: 
+- x crossing: (310.0, 0.0) 
+- y crossing: (92.99675743401272, -1.5707963267948966) 
+red camera: 
+- x crossing: (310.0, -2.0943951023931953) 
+- y crossing: (34.55716105444586, 2.617993877991495)
+green camera: 
+- x crossing: (310.0, 2.0943951023931957) 
+- y crossing: (115.91513618200909, -2.617993877991494)
+
+[GLOBAL INFO] CORRECTED LINE EQUATIONS 
+- blue camera: 0.29999x-92.99676
+- green camera: -5.97690x-657.95093
+- red camera: 2.28464x85.65200
+
+[GLOBAL INFO] LINE INTERSECTIONS / TRAIGLE POINTS
+- first point: -90.01503, -120.00032
+- second point: -90.00550, -119.99747
+- third point: -90.00779, -119.98379
+
+[GLOBAL INFO] FINAL DART POSITION CARTESIAN COORDS
+- x: -90.00944
+- y: -119.99386
+
+[GLOBAL INFO] FINAL DART POSITION POLAR COORDS
+- radius: 150.00075
+- angle (radians): -2.21437
+- angle (degrees): -126.87419
+
+[GLOBAL INFO] PROGRAM EXECUTION TIME: 0.96900ms
