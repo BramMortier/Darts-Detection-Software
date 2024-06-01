@@ -30,8 +30,8 @@ requestBody = {
     "total": 120,
 }
 
-response = requests.post(f"http://localhost:3000/boards/{BOARD_CODE}/detection", json = requestBody)
-print(response.json());
+# response = requests.post(f"http://localhost:3000/boards/{BOARD_CODE}/detection", json = requestBody)
+# print(response.json());
 
 globalLogger = logging.getLogger("GLOBAL")
 globalLogger.setLevel(logging.DEBUG)
@@ -59,6 +59,30 @@ CAM_RED_CORRECTION = 2 * np.pi/3
 
 CAM_GREEN_POSITION = 0.8062 # 240 degrees correction
 CAM_GREEN_CORRECTION = 4 * np.pi/3
+
+zones = {
+    0: "6",
+    1: "13",
+    2: "4",
+    3: "18",
+    4: "1",
+    5: "20",
+    6: "5",
+    7: "12",
+    8: "9",
+    9: "14",
+    10: "11",
+    11: "8",
+    12: "16",
+    13: "7",
+    14: "19",
+    15: "3",
+    16: "17",
+    17: "2", 
+    18: "15",
+    19: "10",
+    20: "6",
+}
 
 globalLogger.info(f"BASE CONFIGURATION \n- dartboard radius: {DARTBOARD_RADIUS} \n- camera radius: {CAMERA_RADIUS} \n")
 
@@ -166,6 +190,40 @@ globalLogger.info(f"FINAL DART POSITION CARTESIAN COORDS\n- x: {result_x:.05f}\n
 result_polar_coords = transform_to_polar_coords(result_x, result_y, 0)
 
 globalLogger.info(f"FINAL DART POSITION POLAR COORDS\n- radius: {result_polar_coords[0]:.05f}\n- angle (radians): {result_polar_coords[1]:.05f}\n- angle (degrees): {np.degrees(result_polar_coords[1]):.05f}\n")
+
+def check_multiplier(distance):
+    if distance >= 0 and distance <= 0.7:
+        return "double bull"
+    elif distance > 0.7 and distance <= 1.6:
+        return "bull"
+    elif distance > 9.75 and distance <= 10.75:
+        return 3
+    elif distance > 16 and distance <= 17:
+        return 2
+    elif distance > 17:
+        return 0
+    else:
+        return 1
+    
+def check_zone(angle):
+    if(angle < 0): angle = angle + 360
+
+    angle_zone = np.floor((angle + 9) / 18)
+
+    for zone, score in zones.items():
+        if(angle_zone == zone):
+            return score
+
+multiplier = check_multiplier(result_polar_coords[0] / 10);
+zone = check_zone(np.degrees(result_polar_coords[1]))
+		
+if(multiplier == "bull"):
+	score = 25
+elif(multiplier == "double bull"):
+	score = 50
+     
+print(multiplier)
+print(zone)
 
 end = datetime.now()
 
