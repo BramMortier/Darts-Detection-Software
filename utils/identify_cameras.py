@@ -2,8 +2,9 @@ import cv2
 
 def test_camera(device_id):
     cap = cv2.VideoCapture(device_id)
+
     if not cap.isOpened():
-        return False
+        print("Invalid camera id")
     else:
         print(device_id)
 

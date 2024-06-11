@@ -1,33 +1,55 @@
+# -------------------------------------------------------------------------------------------------- 
+# Module imports
+# --------------------------------------------------------------------------------------------------
 import cv2
 import time
 
+# -------------------------------------------------------------------------------------------------- 
+# These constants determine how the detection system will be configured
+# --------------------------------------------------------------------------------------------------
+CAM_WIDTH = 1024
+CAM_HEIGHT = 768
+DETECTION_FPS = 5
+
+# -------------------------------------------------------------------------------------------------- 
+# The Camera class lets us instanciate a camera that's automatically configured. It also checks if 
+# the camera is responding correctly
+# --------------------------------------------------------------------------------------------------
 class Camera:
-    def __init__(self, id, width=1024, height=768, rotation=cv2.ROTATE_180):
+    def __init__(self, id, name, width=CAM_WIDTH, height=CAM_HEIGHT, rotation=cv2.ROTATE_180):
         self.id = id
+        self.name = name
         self.width = width
         self.height = height
         self.rotation = rotation
-        self.cap = cv2.VideoCapture(self.id)
+        self.video_capture = cv2.VideoCapture(self.id)
         self.configure_camera()
 
+        if not self.is_opened():
+            print(f"Could not open camera {self.name}")
+
     def configure_camera(self):
-        self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc('M', 'J', 'P', 'G'))
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
+        self.video_capture.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc('M', 'J', 'P', 'G'))
+        self.video_capture.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
+        self.video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
 
     def is_opened(self):
-        return self.cap.isOpened()
+        return self.video_capture.isOpened()
 
     def read_frame(self):
-        ret, frame = self.cap.read()
+        ret, frame = self.video_capture.read()
         if ret:
             frame = cv2.rotate(frame, self.rotation)
         return ret, frame
 
     def release(self):
-        self.cap.release()
+        self.video_capture.release()
 
-class CameraManager:
+# -------------------------------------------------------------------------------------------------- 
+# The Camera class lets us instanciate a camera that's automatically configured. It also checks if 
+# the camera is responding correctly
+# --------------------------------------------------------------------------------------------------
+class DetectionSystem:
     def __init__(self, cameras, fps):
         self.cameras = cameras
         self.fps = fps
@@ -40,11 +62,13 @@ class CameraManager:
                     ret, frame = camera.read_frame()
                     
                     if not ret:
-                        print(f"Skipping corrupted frame from camera {camera.id}")
+                        print(f"Skipping corrupted frame from camera {camera.name}")
                         break
+
                     cv2.imshow(f'Camera {camera.id}', frame)
 
                 time.sleep(self.frame_interval)
+
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
         except KeyboardInterrupt:
@@ -57,20 +81,7 @@ class CameraManager:
         for camera in self.cameras:
             camera.release()
 
-def init_detection_cameras(fps):
-    blue_camera = Camera(0)
-    red_camera = Camera(2)
-    green_camera = Camera(4)
-
-    cameras = [blue_camera, red_camera, green_camera]
-
-    for camera in cameras:
-        if not camera.is_opened():
-            print(f"Could not open camera {camera.id}")
-            return
-
-    manager = CameraManager(cameras, fps)
-    manager.start()
-
 if __name__ == "__main__":
-    init_detection_cameras(5)
+    cameras = [Camera(0, "blue_camera"), Camera(2, "blue_camera"), Camera(4, "blue_camera")]
+
+    DetectionSystem(cameras, DETECTION_FPS).start()

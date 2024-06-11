@@ -1,37 +1,8 @@
 import numpy as np
 import logging
 from datetime import datetime
-import requests 
 
 BOARD_CODE = "DP_KW5PPYWD"
-
-requestBody = {
-    "dart1Sector": 20,
-    "dart1Multiplier": 2,
-    "dart1Score": 40,
-    "dart1X": -90.00944,
-    "dart1Y": -119.99386,
-    "dart1IsThrown": True,
-
-    "dart2Sector": 20,
-    "dart2Multiplier": 2,
-    "dart2Score": 40,
-    "dart2X": -90.00944,
-    "dart2Y": -119.99386,
-    "dart2IsThrown": True,
-
-    "dart3Sector": 20,
-    "dart3Multiplier": 2,
-    "dart3Score": 40,
-    "dart3X": -90.00944,
-    "dart3Y": -119.99386,
-    "dart3IsThrown": True,
-
-    "total": 120,
-}
-
-# response = requests.post(f"http://localhost:3000/boards/{BOARD_CODE}/detection", json = requestBody)
-# print(response.json());
 
 globalLogger = logging.getLogger("GLOBAL")
 globalLogger.setLevel(logging.DEBUG)
